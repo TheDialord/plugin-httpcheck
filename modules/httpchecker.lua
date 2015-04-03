@@ -127,12 +127,9 @@ function HttpCheck:run_test_server()
 
 	server = http.createServer(function(request, response)
 	  local postBuffer = ''
-	  --p(request.method)
-	  --p(request.url)
 	  
 	  request:on('data', function(chunk)
 		postBuffer = postBuffer .. chunk
-		--p(postBuffer)
 	  end)
 	  
 	  request:on('end', function()
@@ -148,6 +145,11 @@ function HttpCheck:run_test_server()
 	return HOST .. ":" .. PORT
 end
 
+local function duration (seconds)
+	local shift = 10 ^ 2
+	local result = math.floor(seconds * 1000 * shift + 0.5) / shift
+	return result
+end
 
 --[[ Get response time and status code of URL with parameters
 ]]
@@ -155,7 +157,6 @@ function HttpCheck:request(method, protocol, url, username, password, postdata, 
 	
 	local params = self:process_params(method, protocol, url, username, password, postdata)
 	
-	--p(params)
 	local _status_code = 404
 	local _exec_time = 0
 	
@@ -175,11 +176,9 @@ function HttpCheck:request(method, protocol, url, username, password, postdata, 
 		  end)
 
 		  res:on("data", function (chunk)
-			--p("ondata", {chunk=chunk})
 			_status_code = res.status_code
-			local end_time = os.clock()
-			_exec_time = end_time - start_time
-			callIfNotNil(callback, { status_code = _status_code, exec_time = _exec_time })
+			_exec_time = os.clock() - start_time
+			callIfNotNil(callback, { status_code = _status_code, exec_time = duration(_exec_time) })
 		  end)
 
 		  res:on("end", function ()
@@ -212,11 +211,9 @@ function HttpCheck:request(method, protocol, url, username, password, postdata, 
 		  end)
 
 		  res:on("data", function (chunk)
-			--p("ondata", {chunk=chunk})
 			_status_code = res.status_code
-			local end_time = os.clock()
-			_exec_time = end_time - start_time
-			callIfNotNil(callback, { status_code = _status_code, exec_time = _exec_time })
+			_exec_time = os.clock() - start_time
+			callIfNotNil(callback, { status_code = _status_code, exec_time = duration(_exec_time) })
 		  end)
 
 		  res:on("end", function ()

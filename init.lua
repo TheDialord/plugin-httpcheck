@@ -4,8 +4,10 @@ local timer = require('timer')
 local string = require('string')
 
 -- Default params
+local __pgk = "Boundary HTTPCheck Plugin"
+local __ver = "Version 1.1"
 local items = {}
-local pollInterval = 20000
+local pollInterval = 2000
 
 -- Fetching params
 if (boundary.param ~= nil) then
@@ -13,19 +15,15 @@ if (boundary.param ~= nil) then
   pollInterval = boundary.param.pollInterval or pollInterval
 end
 
-print("_bevent:Boundary LUA HttpCheck plugin up : version 1.0|t:info|tags:lua,plugin")
+print("_bevent:%s : %s UP|t:info|tags:lua,plugin")
 
 local httpcheck = httpchecker:new()
 
 local function poll()
-	--local host = httpcheck:run_test_server()
-	--httpcheck:request("POST", "http", host, "", "", {"key=1"}, function(response)
-		--p(response)
-	--end)
 	for index, item in ipairs(items) do
 		timer.setTimeout(tonumber(item.pollInterval), function ()
 			httpcheck:request(item['method'], item['protocol'], item['url'], item['username'], item['password'], item['postdata'], function(response)
-				p(string.format("HTTP_RESPONSETIME %s %s", response['exec_time'], item.source))
+				print(string.format("HTTP_RESPONSETIME %s %s", response['exec_time'], item.source))
 			end)
 		end)
 	end
