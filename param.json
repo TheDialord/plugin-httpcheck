@@ -36,5 +36,5 @@
          ]
       }
    ],
-   "pollInterval": 10000
+   "pollInterval": 1000
 }
