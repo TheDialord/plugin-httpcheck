@@ -1,34 +1,55 @@
-local boundary = require('boundary')
-local httpchecker = require('httpchecker')
-local timer = require('timer')
-local string = require('string')
 
--- Default params
-local __pgk = "Boundary HTTPCheck Plugin"
-local __ver = "Version 1.1"
-local items = {}
-local pollInterval = 2000
+cal framework = require('./modules/framework.lua')
+local Plugin = framework.Plugin
+local DataSourcePoller = framework.DataSourcePoller
+local WebRequestDataSource = framework.WebRequestDataSource
+local PollerCollection = framework.PollerCollection
+local url = require('url')
 
--- Fetching params
-if (boundary.param ~= nil) then
-  items = boundary.param.items or items
-  pollInterval = boundary.param.pollInterval or pollInterval
+local auth = framework.util.auth
+
+local params = framework.params
+params.name = 'Boundary Http Check Plugin'
+params.version = '1.2'
+params.tags = 'http'
+
+local function createPollers(params) 
+  local pollers = PollerCollection:new() 
+
+  for _,item in pairs(params.items) do
+
+    local options = url.parse(item.url)
+    options.protocol = options.protocol or item.protocol or 'http'
+    options.auth = options.auth or auth(item.username, item.password)
+    options.method = item.method
+    options.meta = item.source
+    options.data = item.postdata
+
+    options.wait_for_end = false
+
+    local data_source = WebRequestDataSource:new(options)
+
+    local time_interval = tonumber((item.pollInterval or params.pollInterval)) * 1000
+    local poller = DataSourcePoller:new(time_interval, data_source)
+    
+    pollers:add(poller)
+  end
+
+  return pollers
 end
 
-print("_bevent:%s : %s UP|t:info|tags:lua,plugin")
+local pollers = createPollers(params)
 
-local httpcheck = httpchecker:new()
+local plugin = Plugin:new(params, pollers)
+function plugin:onParseValues(_, extra)
+  local result = {}
+  local value = tonumber(extra.response_time) 
+  if extra.status_code < 200 or extra.status_code >= 300 then
+    value = -1
+  end
 
-local function poll()
-	for index, item in ipairs(items) do
-		timer.setTimeout(tonumber(item.pollInterval), function ()
-			httpcheck:request(item['method'], item['protocol'], item['url'], item['username'], item['password'], item['postdata'], function(response)
-				print(string.format("HTTP_RESPONSETIME %s %s", response['exec_time'], item.source))
-			end)
-		end)
-	end
+  result['HTTP_RESPONSETIME'] = {value = value, source = extra.info} 
+
+  return result
 end
-
-timer.setInterval(pollInterval, function ()
-	poll()
-end)
+plugin:run()
