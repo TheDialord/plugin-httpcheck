@@ -1,87 +1,87 @@
 {
-    "description" : "Polls a set of URLs and reports back the response time",
-    "icon" : "icon.png",
-    "command" : "node index.js",
-    "postExtract" : "npm install",
-    "command_lua" : "boundary-meter init.lua",
-    "postExtract_lua" : "",
-    "ignore" : "node_modules",
+  "description" : "Polls a set of URLs and reports back the response time",
+  "icon" : "icon.png",
+  "command" : "node index.js",
+  "postExtract" : "npm install",
+  "command_lua" : "boundary-meter init.lua",
+  "postExtract_lua" : "",
+  "ignore" : "node_modules",
 
-    "metrics" : [ "HTTP_RESPONSETIME" ],
+  "metrics" : [ "HTTP_RESPONSETIME" ],
 
-    "paramArray" : { "itemTitle" : ["source"], "schemaTitle" : "Endpoint"},
-    "paramSchema" : [
-        {
-            "title" : "Source",
-            "name" : "source",
-            "description" : "The source to display in the legend for the endpoint. Ex. www.google.com",
-            "type" : "string",
-            "required" : true
-        },
-        {
-            "title" : "Poll Time (sec)",
-            "name" : "pollInterval",
-            "description" : "The Poll Interval to call your endpoint in seconds. Ex. 5",
-            "type" : "string",
-            "default" : 5,
-            "required" : true
-        },
-        {
-            "title": "Method",
-            "name": "method",
-            "description": "The Method of the endpoint",
-            "type" : { "enum" : [["GET", "GET"], ["POST", "POST"], ["PUT", "PUT"], ["DEL", "DEL"]] },
-            "required": true
-        },
-        {
-            "title": "Protocol",
-            "name": "protocol",
-            "description": "The protocol of the endpoint",
-            "type" : { "enum" : [["HTTP", "http"], ["HTTPS", "https"]]},
-            "required": true
-        },
-        {
-            "title": "URL",
-            "name": "url",
-            "description": "The URL of the endpoint.  For example, www.graphdat.com or www.graphdat.com:8080/some-random-page",
-            "type": "string",
-            "required": true
-        },
-        {
-            "title": "Ignore Status Code",
-            "name": "ignoreStatusCode",
-            "description": "If any response from the server is considered valid, even an error, enable this.",
-            "type": "boolean",
-            "default": false
-        },
-        {
-            "title": "Enable Debug Output",
-            "name": "debugEnabled",
-            "description": "If you are having issues with the plugin, you can enable additional debugging output to be shown in the relay console",
-            "type": "boolean",
-            "default": false
-        },
-        {
-            "title": "Username",
-            "name": "username",
-            "description": "(optional) The username required to access the endpoint",
-            "type": "string",
-            "required": false
-        },
-        {
-            "title": "Password",
-            "name": "password",
-            "description": "(optional) The password required to access the endpoint",
-            "type": "password",
-            "required": false
-        },
-        {
-            "title": "POST data",
-            "name": "postdata",
-            "description": "(optional) Additional information to pass along to the endpoint. Key Values pairs, \"key=value\" one per line",
-            "type": "array",
-            "items" : { "type" : "string" },
-            "required": false
-        }
-    ]
+  "paramArray" : { "itemTitle" : ["source"], "schemaTitle" : "Endpoint"},
+  "paramSchema" : [
+    {
+      "title" : "Source",
+      "name" : "source",
+      "description" : "The source to display in the legend for the endpoint. Ex. www.google.com",
+      "type" : "string",
+      "required" : true
+    },
+    {
+      "title" : "Poll Time (sec)",
+      "name" : "pollInterval",
+      "description" : "The Poll Interval to call your endpoint in seconds. Ex. 5",
+      "type" : "string",
+      "default" : 5,
+      "required" : true
+    },
+    {
+      "title": "Method",
+      "name": "method",
+      "description": "The Method of the endpoint",
+      "type" : { "enum" : [["GET", "GET"], ["POST", "POST"], ["PUT", "PUT"], ["DEL", "DEL"]] },
+      "required": true
+    },
+    {
+      "title": "Protocol",
+      "name": "protocol",
+      "description": "The protocol of the endpoint",
+      "type" : { "enum" : [["HTTP", "http"], ["HTTPS", "https"]]},
+      "required": true
+    },
+    {
+      "title": "URL",
+      "name": "url",
+      "description": "The URL of the endpoint.  For example, www.graphdat.com or www.graphdat.com:8080/some-random-page",
+      "type": "string",
+      "required": true
+    },
+    {
+      "title": "Ignore Status Code",
+      "name": "ignoreStatusCode",
+      "description": "If any response from the server is considered valid, even an error, enable this.",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "title": "Enable Debug Output",
+      "name": "debugEnabled",
+      "description": "If you are having issues with the plugin, you can enable additional debugging output to be shown in the relay console",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "title": "Username",
+      "name": "username",
+      "description": "(optional) The username required to access the endpoint",
+      "type": "string",
+      "required": false
+    },
+    {
+      "title": "Password",
+      "name": "password",
+      "description": "(optional) The password required to access the endpoint",
+      "type": "password",
+      "required": false
+    },
+    {
+      "title": "POST data",
+      "name": "postdata",
+      "description": "(optional) Additional information to pass along to the endpoint. Key Values pairs, \"key=value\" one per line",
+      "type": "array",
+      "items" : { "type" : "string" },
+      "required": false
+    }
+  ]
 }
